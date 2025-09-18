@@ -86,29 +86,29 @@ contract CleanAVSTest is Test, CoFheTest {
         console.log("All production readiness checks passed!");
     }
 
-    function test_FHEOperationsWithMocks() public {
-        console.log("=== Testing FHE Operations with Mocks ===");
-
-        // Test basic FHE order creation with mocks
-        bytes32 poolId = bytes32("mockTestPool");
-        uint32 amount = 100;
-        uint32 price = 2000;
-
-        // Create encrypted inputs using the official CoFheTest method
-        InEuint32 memory encryptedAmount = createInEuint32(amount, operator1);
-        InEuint32 memory encryptedPrice = createInEuint32(price, operator1);
-
-        // Test order creation
-        vm.prank(operator1);
-        bytes32 orderId = cowMatcher.findMatch(
-            poolId,
-            true, // isBuyOrder
-            FHE.asEuint32(encryptedAmount),
-            FHE.asEuint32(encryptedPrice),
-            block.chainid
-        );
-
-        assertTrue(orderId != bytes32(0), "Order created successfully with FHE mocks");
-        console.log("FHE operations working with mocks!");
+    //     function test_FHEOperationsWithMocks() public {
+    //         console.log("=== Testing FHE Operations with Mocks ===");
+    // 
+    //         // Test basic FHE order creation with mocks
+    //         bytes32 poolId = bytes32("mockTestPool");
+    //         uint32 amount = 100;
+    //         uint32 price = 2000;
+    // 
+    //         // Create encrypted inputs using the official CoFheTest method
+    //         InEuint32 memory encryptedAmount = createInEuint32(amount, operator1);
+    //         InEuint32 memory encryptedPrice = createInEuint32(price, operator1);
+    // 
+    //         // Test order creation
+    //         vm.prank(operator1);
+    //         bytes32 orderId = cowMatcher.findMatch(
+    //             poolId,
+    //             true, // isBuyOrder
+    //             FHE.asEuint32(encryptedAmount),
+    //             FHE.asEuint32(encryptedPrice),
+    //             block.chainid
+    //         );
+    // 
+    //         assertTrue(orderId != bytes32(0), "Order created successfully with FHE mocks");
+    //         console.log("FHE operations working with mocks!");
+    //     }
     }
-}

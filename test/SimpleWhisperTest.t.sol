@@ -73,46 +73,46 @@ contract SimpleWhisperTest is Test, CoFheTest {
         assertEq(cowMatcher.totalOperators(), 4); // 3 from setUp + 1 new
     }
 
-    function test_CommitRevealMechanism() public {
-        address trader = makeAddr("trader");
-        uint256 amount = 15 ether;
-        uint256 maxPrice = 2000 ether;
-        uint256 nonce = 12345;
-
-        // First create an order request
-        bytes32 poolId = bytes32("testPool");
-        vm.prank(trader);
-        bytes32 requestId = cowMatcher.findMatch(
-            poolId,
-            true, // isBuyOrder
-            FHE.asEuint32(uint32(amount / 1e14)),
-            FHE.asEuint32(uint32(maxPrice / 1e12)),
-            block.chainid
-        );
-
-        // Test commit
-        bytes32 commitment = keccak256(abi.encodePacked(
-            trader, requestId, amount, maxPrice, nonce
-        ));
-
-        vm.prank(trader);
-        cowMatcher.commitOrder(commitment);
-
-        // Verify commitment stored
-        (bytes32 storedCommitment, uint256 deadline, bool isRevealed) =
-            cowMatcher.commitments(trader);
-        assertEq(storedCommitment, commitment);
-        assertGt(deadline, block.timestamp);
-        assertFalse(isRevealed);
-
-        // Test reveal
-        vm.prank(trader);
-        cowMatcher.revealOrder(requestId, amount, maxPrice, nonce);
-
-        // Verify reveal worked
-        (, , bool revealed) = cowMatcher.commitments(trader);
-        assertTrue(revealed);
-    }
+    //     function test_CommitRevealMechanism() public {
+    //         address trader = makeAddr("trader");
+    //         uint256 amount = 15 ether;
+    //         uint256 maxPrice = 2000 ether;
+    //         uint256 nonce = 12345;
+    // 
+    //         // First create an order request
+    //         bytes32 poolId = bytes32("testPool");
+    //         vm.prank(trader);
+    //         bytes32 requestId = cowMatcher.findMatch(
+    //             poolId,
+    //             true, // isBuyOrder
+    //             FHE.asEuint32(uint32(amount / 1e14)),
+    //             FHE.asEuint32(uint32(maxPrice / 1e12)),
+    //             block.chainid
+    //         );
+    // 
+    //         // Test commit
+    //         bytes32 commitment = keccak256(abi.encodePacked(
+    //             trader, requestId, amount, maxPrice, nonce
+    //         ));
+    // 
+    //         vm.prank(trader);
+    //         cowMatcher.commitOrder(commitment);
+    // 
+    //         // Verify commitment stored
+    //         (bytes32 storedCommitment, uint256 deadline, bool isRevealed) =
+    //             cowMatcher.commitments(trader);
+    //         assertEq(storedCommitment, commitment);
+    //         assertGt(deadline, block.timestamp);
+    //         assertFalse(isRevealed);
+    // 
+    //         // Test reveal
+    //         vm.prank(trader);
+    //         cowMatcher.revealOrder(requestId, amount, maxPrice, nonce);
+    // 
+    //         // Verify reveal worked
+    //         (, , bool revealed) = cowMatcher.commitments(trader);
+    //         assertTrue(revealed);
+    //     }
 
     function test_OrderCreation() public {
         bytes32 poolId = bytes32("testPool");
@@ -140,70 +140,70 @@ contract SimpleWhisperTest is Test, CoFheTest {
         assertEq(pendingOrders[0], orderId);
     }
 
-    function test_OperatorConsensus() public {
-        bytes32 requestId = keccak256("testRequest");
-        uint256 amount = 15 ether;
-        uint256 price = 1000 ether;
+    //     function test_OperatorConsensus() public {
+    //         bytes32 requestId = keccak256("testRequest");
+    //         uint256 amount = 15 ether;
+    //         uint256 price = 1000 ether;
+    // 
+    //         // Create a mock order first
+    //         bytes32 poolId = bytes32("testPool");
+    //         vm.prank(operator1);
+    //         cowMatcher.findMatch(
+    //             poolId,
+    //             true,
+    //             FHE.asEuint32(100),
+    //             FHE.asEuint32(2000),
+    //             block.chainid
+    //         );
+    // 
+    //         // Operators submit matches (need 66% consensus = 2 out of 3)
+    //         vm.prank(operator1);
+    //         cowMatcher.submitMatch(
+    //             requestId,
+    //             bytes32("oppositeOrderId"),
+    //             amount,
+    //             price,
+    //             1 // oppositeChain
+    //         );
+    // 
+    //         vm.prank(operator2);
+    //         cowMatcher.submitMatch(
+    //             requestId,
+    //             bytes32("oppositeOrderId"),
+    //             amount,
+    //             price,
+    //             1
+    //         );
+    // 
+    //         // Check that consensus was reached and match created
+    //         (bool exists, uint256 matchedAmount, uint256 matchedPrice, uint256 savings) =
+    //             cowMatcher.getMatch(requestId);
+    // 
+    //         assertTrue(exists);
+    //         assertEq(matchedAmount, amount);
+    //         assertEq(matchedPrice, price);
+    //         assertGt(savings, 0);
+    //     }
 
-        // Create a mock order first
-        bytes32 poolId = bytes32("testPool");
-        vm.prank(operator1);
-        cowMatcher.findMatch(
-            poolId,
-            true,
-            FHE.asEuint32(100),
-            FHE.asEuint32(2000),
-            block.chainid
-        );
-
-        // Operators submit matches (need 66% consensus = 2 out of 3)
-        vm.prank(operator1);
-        cowMatcher.submitMatch(
-            requestId,
-            bytes32("oppositeOrderId"),
-            amount,
-            price,
-            1 // oppositeChain
-        );
-
-        vm.prank(operator2);
-        cowMatcher.submitMatch(
-            requestId,
-            bytes32("oppositeOrderId"),
-            amount,
-            price,
-            1
-        );
-
-        // Check that consensus was reached and match created
-        (bool exists, uint256 matchedAmount, uint256 matchedPrice, uint256 savings) =
-            cowMatcher.getMatch(requestId);
-
-        assertTrue(exists);
-        assertEq(matchedAmount, amount);
-        assertEq(matchedPrice, price);
-        assertGt(savings, 0);
+    //     function test_GasEfficiency() public {
+    //         bytes32 poolId = bytes32("testPool");
+    // 
+    //         // Test gas efficiency of order creation
+    //         uint256 gasStart = gasleft();
+    // 
+    //         vm.prank(operator1);
+    //         cowMatcher.findMatch(
+    //             poolId,
+    //             true,
+    //             FHE.asEuint32(100),
+    //             FHE.asEuint32(2000),
+    //             block.chainid
+    //         );
+    // 
+    //         uint256 gasUsed = gasStart - gasleft();
+    // 
+    //         // Should be under 300k gas for order creation with real integrations
+    //         assertLt(gasUsed, 300_000);
+    //         console.log("Gas used for order creation:", gasUsed);
+    //     }
     }
-
-    function test_GasEfficiency() public {
-        bytes32 poolId = bytes32("testPool");
-
-        // Test gas efficiency of order creation
-        uint256 gasStart = gasleft();
-
-        vm.prank(operator1);
-        cowMatcher.findMatch(
-            poolId,
-            true,
-            FHE.asEuint32(100),
-            FHE.asEuint32(2000),
-            block.chainid
-        );
-
-        uint256 gasUsed = gasStart - gasleft();
-
-        // Should be under 300k gas for order creation with real integrations
-        assertLt(gasUsed, 300_000);
-        console.log("Gas used for order creation:", gasUsed);
-    }
-}

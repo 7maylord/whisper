@@ -1,12 +1,14 @@
 [profile.default]
 src = "src"
 out = "out"
-libs = ["node_modules"]
-ffi = false
+libs = ["node_modules", "lib"]
 fs_permissions = [{ access = "read-write", path = ".forge-snapshots/"}]
 solc_version = "0.8.26"
 evm_version = "cancun"
 auto_detect_remappings = false
-
+optimizer_runs = 200
+via_ir = true
+ffi = true
+isolate = true
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
